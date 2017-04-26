@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+    <title>Tone</title>
+    <script src="lib/Tone.js"></script>
+
+    <script>
+        var osc = new Tone.Oscillator({
+            "type" : "sine",
+            "frequency" : 225,
+            "volume" : -50
+        }).toMaster();
+        var phaseTimer
+
+        function startOscillator() {
+            osc.start();
+        }
+        function stopOscillator() {
+            osc.stop();
+        }
+        function updateTone(db, frequency){
+            osc.frequency.value = frequency;
+            osc.volume.value = db;
+        }
+        function generateTone(db, frequency){
+            osc.stop();
+            osc.frequency.value = frequency;
+            osc.volume.value = db;
+            osc.start()
+            osc.phase.value = 1
+            phaseTimer = setInterval(changePhase, 1000);
+        }
+        function changePhase(){
+            if (osc.phase == 180){
+                clearInterval(phaseTimer)
+                osc.stop()
+            }
+            console.log("Frequency: " + osc.frequency.value)
+            console.log("dB: " + osc.volume.value)
+            console.log("Phase: " + osc.phase)
+            osc.phase = osc.phase + 10
+        }
+    </script>
+
+</head>
+<body>
+    <h1>PROTOTYPE</h1>
+    <h3>Instructions</h3>
+    <p>
+        <ol>
+            <li>Plug in and put on headphones</li>
+            <li>Turn computer volume to maximum</li>
+            <li>Press start button</li>
+            <li>Adjust dB and Frequency values untill they match the sound of your tinnitus</li>
+            <li>Press stop button</li>
+            <li>Press Generate Tone</li>
+            <li>Listen to treatment tone until it stops</li>
+        </ol>
+    </p>
+    <div id="Controls">
+        <button onclick="startOscillator()">Start</button>
+        <button onClick="stopOscillator()">Stop</button>
+    </div>
+    <div id="Variables">
+        <label>dB</label>
+        <input type="number" name="dB" id="dB" value="-50" onChange="updateTone(document.getElementById('dB').value, document.getElementById('frequency').value)"></input>
+        <label>Frequency</label>
+        <input type="number" name="frequency" id="frequency" value="225" onChange="updateTone(document.getElementById('dB').value, document.getElementById('frequency').value)"></input>
+    </div>
+    <div id="Generator">
+        <button onClick="generateTone(document.getElementById('dB').value, document.getElementById('frequency').value)">Generate Tone</button>
+    </div>
+    <h1>PROTOTYPE</h1>
+</body>
+</html>
