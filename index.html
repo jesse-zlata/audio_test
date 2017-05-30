@@ -29,17 +29,17 @@
             osc.volume.value = db;
             osc.start()
             osc.phase.value = 1
-            phaseTimer = setInterval(changePhase, 1000);
+            phaseTimer = setInterval(changePhase, 1000*30);
         }
         function changePhase(){
-            if (osc.phase == 180){
+            if (osc.phase > 360){
                 clearInterval(phaseTimer)
                 osc.stop()
             }
             console.log("Frequency: " + osc.frequency.value)
             console.log("dB: " + osc.volume.value)
             console.log("Phase: " + osc.phase)
-            osc.phase = osc.phase + 10
+            osc.phase = osc.phase + 6
         }
     </script>
 
