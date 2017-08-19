@@ -12,6 +12,7 @@
             "volume" : -50
         }).toMaster();
         var phaseTimer
+        var timerCount
 
         function startOscillator() {
             osc.start();
@@ -29,17 +30,16 @@
             osc.volume.value = db;
             osc.start()
             osc.phase.value = 1
-            phaseTimer = setInterval(changePhase, 1000*30);
+            phaseTimer = setInterval(changePhase, 35);
         }
         function changePhase(){
-            if (osc.phase > 360){
-                clearInterval(phaseTimer)
-                osc.stop()
-            }
             console.log("Frequency: " + osc.frequency.value)
             console.log("dB: " + osc.volume.value)
             console.log("Phase: " + osc.phase)
-            osc.phase = osc.phase + 6
+            osc.phase += 1
+        }
+        function phaseRotation(){
+
         }
     </script>
 
