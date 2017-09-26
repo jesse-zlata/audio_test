@@ -8,7 +8,7 @@
     <script>
         var osc = new Tone.Oscillator({
             "type" : "sine",
-            "frequency" : 225,
+            "frequency" : 700,
             "volume" : -50
         }).toMaster();
         var phaseTimer
@@ -20,26 +20,46 @@
         function stopOscillator() {
             osc.stop();
         }
+        function stopTreatment(){
+            console.log("Stop treatment called")
+            //clear timers
+            clearInterval(treatmentTimer)
+            clearInterval(phaseTimer)
+            //stop tone
+            stopOscillator()
+            //unlock fields
+            document.getElementById('dB').disabled = false
+            document.getElementById('frequency').disabled = false
+        }
         function updateTone(db, frequency){
             osc.frequency.value = frequency;
             osc.volume.value = db;
         }
         function generateTone(db, frequency){
+            // lock fields
+            document.getElementById('dB').disabled = true
+            document.getElementById('frequency').disabled = true
+            //clear playing tone
             osc.stop();
+            //set osCillator
             osc.frequency.value = frequency;
             osc.volume.value = db;
+            //start
             osc.start()
             osc.phase.value = 1
-            phaseTimer = setInterval(changePhase, 35);
+            //change phase ever 30 mills
+            phaseTimer = setInterval(changePhase, 30);
+            //stop treatment after 30 min
+            treatmentTimer = setInterval(stopTreatment, 10000*30);
         }
         function changePhase(){
             console.log("Frequency: " + osc.frequency.value)
             console.log("dB: " + osc.volume.value)
             console.log("Phase: " + osc.phase)
             osc.phase += 1
-        }
-        function phaseRotation(){
-
+            if (osc.phase >= 360){
+                osc.phase = 0
+            }
         }
     </script>
 
@@ -51,25 +71,26 @@
         <ol>
             <li>Plug in and put on headphones</li>
             <li>Turn computer volume to maximum</li>
-            <li>Press start button</li>
             <li>Adjust dB and Frequency values untill they match the sound of your tinnitus</li>
-            <li>Press stop button</li>
-            <li>Press Generate Tone</li>
+            <li>Use the Preview Start and Preview Stop buttons to check the tone</li>
+            <li>Press Start Treatment</li>
             <li>Listen to treatment tone until it stops</li>
         </ol>
     </p>
     <div id="Controls">
-        <button onclick="startOscillator()">Start</button>
-        <button onClick="stopOscillator()">Stop</button>
+        <button onclick="startOscillator()">Preview Start</button>
+        <button onClick="stopOscillator()">Preview Stop</button>
     </div>
     <div id="Variables">
         <label>dB</label>
         <input type="number" name="dB" id="dB" value="-50" onChange="updateTone(document.getElementById('dB').value, document.getElementById('frequency').value)"></input>
         <label>Frequency</label>
-        <input type="number" name="frequency" id="frequency" value="225" onChange="updateTone(document.getElementById('dB').value, document.getElementById('frequency').value)"></input>
+        <input type="number" name="frequency" id="frequency" value="700" onChange="updateTone(document.getElementById('dB').value, document.getElementById('frequency').value)"></input>
     </div>
+    <hr>
     <div id="Generator">
-        <button onClick="generateTone(document.getElementById('dB').value, document.getElementById('frequency').value)">Generate Tone</button>
+        <button onClick="generateTone(document.getElementById('dB').value, document.getElementById('frequency').value)">Start Treatment</button>
+        <button onClick="stopTreatment()">Stop Treatment</button>
     </div>
     <h1>PROTOTYPE</h1>
 </body>
